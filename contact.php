@@ -68,7 +68,7 @@ class Contact
     public function toString(): string
     {
         return sprintf(
-            "[%d] %s | %s | %s",
+            "[id: %d] [name: %s] [email: %s] [phone_number: %s]",
             $this->id          ?? 0,
             $this->name        ?? 'N/A',
             $this->email       ?? 'N/A',
