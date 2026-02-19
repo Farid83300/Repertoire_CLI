@@ -14,9 +14,9 @@ class ContactManager
     }
 
     /**
-     * Récupère tous les contacts de la base de données.
+     * Récupère tous les contacts.
      *
-     * @return Contact[] Tableau d'objets Contact.
+     * @return Contact[]
      */
     public function findAll(): array
     {
@@ -35,5 +35,48 @@ class ContactManager
         }
 
         return $contacts;
+    }
+
+    // Récupère un contact par son id
+    public function findById(int $id): ?Contact
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM contact WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        if ($row === false) {
+            return null;
+        }
+
+        return new Contact(
+            (int) $row['id'],
+            $row['name'],
+            $row['email'],
+            $row['phone_number']
+        );
+    }
+
+    // Crée un nouveau contact en base
+    public function create(Contact $contact): void
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO contact (name, email, phone_number) VALUES (:name, :email, :phone_number)'
+        );
+        $stmt->execute([
+            'name'         => $contact->getName(),
+            'email'        => $contact->getEmail(),
+            'phone_number' => $contact->getPhoneNumber(),
+        ]);
+
+        $contact->setId((int) $this->pdo->lastInsertId());
+    }
+
+    // Supprime un contact par son id
+    public function delete(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM contact WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
     }
 }
