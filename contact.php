@@ -64,9 +64,13 @@ class Contact
         $this->phoneNumber = $phoneNumber;
     }
 
-    // --- Représentation textuelle ---
-
-    public function toString(): string
+    /**
+     * Méthode magique __toString :
+     * Appelée automatiquement par PHP quand l'objet est utilisé
+     * dans un contexte de chaîne (ex: echo $contact).
+     * Remplace l'ancienne méthode toString() qu'il fallait appeler manuellement.
+     */
+    public function __toString(): string
     {
         return sprintf(
             "[id: %d] [name: %s] [email: %s] [phone_number: %s]",

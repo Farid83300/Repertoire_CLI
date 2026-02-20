@@ -8,15 +8,18 @@ class ContactManager
 {
     private PDO $pdo;
 
+    /**
+     * Injection de dépendance : on reçoit DBConnect plutôt que
+     * de créer la connexion ici, ce qui facilite les tests et
+     * le découplage entre les classes.
+     */
     public function __construct(DBConnect $db)
     {
         $this->pdo = $db->getPDO();
     }
 
     /**
-     * Récupère tous les contacts.
-     *
-     * @return Contact[]
+     * @return Contact[] Tableau d'objets Contact.
      */
     public function findAll(): array
     {
@@ -37,7 +40,10 @@ class ContactManager
         return $contacts;
     }
 
-    // Récupère un contact par son id
+    /**
+     * Retourne un seul Contact ou null si l'id n'existe pas.
+     * Utilise une requête préparée pour se protéger des injections SQL.
+     */
     public function findById(int $id): ?Contact
     {
         $stmt = $this->pdo->prepare('SELECT * FROM contact WHERE id = :id');
@@ -56,7 +62,6 @@ class ContactManager
         );
     }
 
-    // Crée un nouveau contact en base
     public function create(Contact $contact): void
     {
         $stmt = $this->pdo->prepare(
@@ -68,10 +73,26 @@ class ContactManager
             'phone_number' => $contact->getPhoneNumber(),
         ]);
 
+        // Récupère l'id auto-incrémenté généré par MySQL et l'assigne à l'objet
         $contact->setId((int) $this->pdo->lastInsertId());
     }
 
-    // Supprime un contact par son id
+    public function update(Contact $contact): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE contact SET name = :name, email = :email, phone_number = :phone_number WHERE id = :id'
+        );
+        $stmt->execute([
+            'id'           => $contact->getId(),
+            'name'         => $contact->getName(),
+            'email'        => $contact->getEmail(),
+            'phone_number' => $contact->getPhoneNumber(),
+        ]);
+
+        // rowCount() retourne le nombre de lignes affectées (0 si aucune modification)
+        return $stmt->rowCount() > 0;
+    }
+
     public function delete(int $id): bool
     {
         $stmt = $this->pdo->prepare('DELETE FROM contact WHERE id = :id');
