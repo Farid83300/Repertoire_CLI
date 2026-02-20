@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : lun. 16 fév. 2026 à 09:26
+-- Généré le : ven. 20 fév. 2026 à 16:56
 -- Version du serveur : 8.0.44
 -- Version de PHP : 8.3.28
 
@@ -41,7 +41,8 @@ CREATE TABLE `contact` (
 INSERT INTO `contact` (`id`, `name`, `email`, `phone_number`) VALUES
 (1, 'Sophie Leblanc', 'sophie.leblanc@gmail.com', '0601020304'),
 (2, 'Thomas Bernard', 'thomas.bernard@outlook.fr', '0612345678'),
-(3, 'Caroline Petit', 'caroline.petit@yahoo.fr', '0623456789');
+(3, 'Caroline Petit', 'caroline.petit@yahoo.fr', '0623456789'),
+(5, 'John Doe', 'john.doe@icloud.com', '+212640557195');
 
 --
 -- Index pour les tables déchargées
@@ -61,7 +62,7 @@ ALTER TABLE `contact`
 -- AUTO_INCREMENT pour la table `contact`
 --
 ALTER TABLE `contact`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
